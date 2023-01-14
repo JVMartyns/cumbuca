@@ -7,6 +7,10 @@ defmodule CumbucaWeb.Router do
 
   scope "/api", CumbucaWeb do
     pipe_through :api
+
+    scope "/accounts" do
+      post "/", AccountController, :create
+    end
   end
 
   # Enables LiveDashboard only for development
