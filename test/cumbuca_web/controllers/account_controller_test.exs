@@ -4,7 +4,8 @@ defmodule CumbucaWeb.AccountControllerTest do
   @valid_params %{
     first_name: "Za",
     last_name: "Warudo",
-    cpf: "61056482001"
+    cpf: "61056482001",
+    password: "12345678"
   }
 
   describe "create/2" do
@@ -16,15 +17,21 @@ defmodule CumbucaWeb.AccountControllerTest do
 
       assert %{
                "data" => %{
-                 "id" => _id,
-                 "balance" => "0",
-                 "cpf" => "61056482001",
-                 "first_name" => "Za",
-                 "last_name" => "Warudo",
-                 "inserted_at" => _inserted_at,
-                 "updated_at" => _updated_at
+                 "account" => %{
+                   "id" => id,
+                   "balance" => "0",
+                   "cpf" => "61056482001",
+                   "password" => "12345678",
+                   "first_name" => "Za",
+                   "last_name" => "Warudo",
+                   "inserted_at" => _inserted_at,
+                   "updated_at" => _updated_at
+                 },
+                 "token" => token
                }
              } = response
+
+      assert {:ok, %{id: ^id}} = CumbucaWeb.Token.verify(token)
     end
 
     test "when account has already exist", %{conn: conn} do
@@ -63,11 +70,45 @@ defmodule CumbucaWeb.AccountControllerTest do
         "errors" => %{
           "cpf" => ["can't be blank"],
           "first_name" => ["can't be blank"],
-          "last_name" => ["can't be blank"]
+          "last_name" => ["can't be blank"],
+          "password" => ["can't be blank"]
         }
       }
 
       assert response == expected_response
+    end
+  end
+
+  describe "login/2" do
+    test "when params are valid, return an token", %{conn: conn} do
+      {:ok, %{id: id}} = Cumbuca.Accounts.create_account(@valid_params)
+
+      valid_login = %{
+        cpf: @valid_params.cpf,
+        password: @valid_params.password
+      }
+
+      response =
+        conn
+        |> post(Routes.account_path(conn, :login, valid_login))
+        |> json_response(200)
+
+      assert %{"data" => %{"token" => token}} = response
+      assert {:ok, %{id: ^id}} = CumbucaWeb.Token.verify(token)
+    end
+
+    test "when params are invalid, return an error", %{conn: conn} do
+      invalid_login = %{
+        cpf: "11122233345",
+        password: "invalid_password"
+      }
+
+      response =
+        conn
+        |> post(Routes.account_path(conn, :login, invalid_login))
+        |> json_response(401)
+
+      assert response == %{"errors" => %{"detail" => "Unauthorized"}}
     end
   end
 end

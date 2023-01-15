@@ -7,7 +7,8 @@ defmodule Cumbuca.Accounts.CreateAccountTest do
   @valid_params %{
     first_name: "Za",
     last_name: "Warudo",
-    cpf: "61056482001"
+    cpf: "61056482001",
+    password: "12345678"
   }
 
   describe "call/1" do
@@ -47,7 +48,8 @@ defmodule Cumbuca.Accounts.CreateAccountTest do
       assert errors_on(changeset) == %{
                cpf: ["can't be blank"],
                first_name: ["can't be blank"],
-               last_name: ["can't be blank"]
+               last_name: ["can't be blank"],
+               password: ["can't be blank"]
              }
     end
   end

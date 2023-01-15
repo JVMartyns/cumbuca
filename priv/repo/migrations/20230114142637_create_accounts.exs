@@ -7,6 +7,7 @@ defmodule Cumbuca.Repo.Migrations.CreateAccounts do
       add :first_name, :string
       add :last_name, :string
       add :cpf, :string
+      add :password, :string
       add :balance, :decimal
 
       timestamps()

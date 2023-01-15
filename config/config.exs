@@ -37,6 +37,10 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :cumbuca, :token,
+  salt: System.fetch_env!("TOKEN_SALT"),
+  ttl: String.to_integer(System.fetch_env!("TOKEN_TTL"))
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

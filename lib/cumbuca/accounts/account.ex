@@ -5,11 +5,12 @@ defmodule Cumbuca.Accounts.Account do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   @timestamps_opts [type: :utc_datetime]
-  @required_fields ~w(first_name last_name cpf)a
+  @required_fields ~w(first_name last_name cpf password)a
   @optional_fields ~w(balance)a
 
   schema "accounts" do
     field :cpf, :string
+    field :password, :string
     field :first_name, :string
     field :last_name, :string
     field :balance, :decimal, default: Decimal.new(0)

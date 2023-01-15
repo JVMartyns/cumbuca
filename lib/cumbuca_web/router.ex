@@ -10,6 +10,7 @@ defmodule CumbucaWeb.Router do
 
     scope "/accounts" do
       post "/", AccountController, :create
+      post "/login", AccountController, :login
     end
   end
 
