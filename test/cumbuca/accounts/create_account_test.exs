@@ -1,6 +1,6 @@
 defmodule Cumbuca.Accounts.CreateAccountTest do
   use Cumbuca.DataCase
-
+  import Cumbuca.Factory
   alias Cumbuca.Accounts.Account
   alias Cumbuca.Accounts.CreateAccount
 
@@ -29,7 +29,7 @@ defmodule Cumbuca.Accounts.CreateAccountTest do
     end
 
     test "when account has already exist" do
-      CreateAccount.call(@valid_params)
+      insert(:account, cpf: @valid_params.cpf)
 
       assert {:error, changeset} = CreateAccount.call(@valid_params)
       assert errors_on(changeset) == %{cpf: ["has already been taken"]}
