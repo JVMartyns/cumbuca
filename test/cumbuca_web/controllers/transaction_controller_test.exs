@@ -39,13 +39,13 @@ defmodule CumbucaWeb.TransactionControllerTest do
 
   describe "create/2" do
     test "create transaction", %{conn: conn} do
-      sender_account = insert(:account)
-      receiver_account = insert(:account, cpf: "69441939064")
+      %{cpf: sender_account_cpf} = sender_account = insert(:account)
+      %{cpf: receiver_account_cpf} = insert(:account)
 
       token = CumbucaWeb.Token.create(sender_account)
 
       request_body = %{
-        cpf: receiver_account.cpf,
+        cpf: receiver_account_cpf,
         value: 100
       }
 
@@ -57,12 +57,12 @@ defmodule CumbucaWeb.TransactionControllerTest do
 
       assert %{
                "data" => %{
-                 "chargeback?" => false,
                  "id" => _id,
                  "processed_at" => nil,
-                 "receiver_account" => "69441939064",
+                 "sender_account" => ^sender_account_cpf,
+                 "receiver_account" => ^receiver_account_cpf,
                  "reversed_transaction_id" => nil,
-                 "sender_account" => "61056482001",
+                 "chargeback?" => false,
                  "value" => "100"
                }
              } = response

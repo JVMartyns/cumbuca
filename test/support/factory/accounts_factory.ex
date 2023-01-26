@@ -7,7 +7,7 @@ defmodule Cumbuca.Factory.AccountFactory do
         %Account{
           first_name: "Za",
           last_name: "Warudo",
-          cpf: "61056482001",
+          cpf: Cpf.generate(),
           password: "12345678",
           balance: "100"
         }

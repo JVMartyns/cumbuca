@@ -6,11 +6,10 @@ defmodule Cumbuca.Factory.TransactionsFactory do
       def transaction_factory do
         %Transaction{
           id: Ecto.UUID.generate(),
-          chargeback?: false,
-          processed_at: nil,
-          value: Decimal.new(100),
           sender_account_id: Ecto.UUID.generate(),
           receiver_account_id: Ecto.UUID.generate(),
+          value: Decimal.new(100),
+          chargeback?: false,
           reversed_transaction_id: nil,
           inserted_at: DateTime.utc_now(),
           processed_at: DateTime.utc_now(),
