@@ -1,5 +1,6 @@
 defmodule CumbucaWeb.AccountControllerTest do
   use CumbucaWeb.ConnCase
+  import Cumbuca.Factory
 
   @valid_params %{
     first_name: "Za",
@@ -35,7 +36,7 @@ defmodule CumbucaWeb.AccountControllerTest do
     end
 
     test "when account has already exist", %{conn: conn} do
-      Cumbuca.Accounts.create_account(@valid_params)
+      insert(:account, cpf: @valid_params.cpf)
 
       response =
         conn
@@ -81,11 +82,11 @@ defmodule CumbucaWeb.AccountControllerTest do
 
   describe "login/2" do
     test "when params are valid, return an token", %{conn: conn} do
-      {:ok, %{id: id}} = Cumbuca.Accounts.create_account(@valid_params)
+      %{id: id, cpf: cpf, password: password} = insert(:account)
 
       valid_login = %{
-        cpf: @valid_params.cpf,
-        password: @valid_params.password
+        cpf: cpf,
+        password: password
       }
 
       response =

@@ -2,14 +2,20 @@ FROM hexpm/elixir:1.14.0-erlang-25.0-alpine-3.17.0
 
 WORKDIR /app
 
-RUN apk update && apk add --no-cache build-base
+RUN apk update && apk add --no-cache \
+    build-base \
+    git \
+    openssh-client
 
 RUN mix local.hex --force && \
     mix local.rebar --force
 
 COPY . .
 
-RUN mix do deps.get, deps.compile
+RUN mkdir /root/.ssh
+RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+RUN --mount=type=ssh mix do deps.get, deps.compile
 
 EXPOSE 4000
 

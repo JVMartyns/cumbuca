@@ -28,4 +28,10 @@ defmodule Cumbuca.Transactions.Transaction do
     |> validate_required(@required_fields)
     |> validate_number(:value, greater_than: 0)
   end
+
+  def build(attrs) do
+    %__MODULE__{}
+    |> changeset(attrs)
+    |> apply_action(:build)
+  end
 end

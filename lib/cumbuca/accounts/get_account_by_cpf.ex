@@ -8,7 +8,7 @@ defmodule Cumbuca.Accounts.GetAccountByCpf do
 
     case Repo.one(query) do
       %Account{} = result -> {:ok, result}
-      nil -> {:error, "no result for query: #{inspect(query)}"}
+      nil -> {:error, "account not found for [cpf: #{cpf}]"}
     end
   end
 end

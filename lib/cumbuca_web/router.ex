@@ -5,12 +5,23 @@ defmodule CumbucaWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug CumbucaWeb.AuthPlug
+  end
+
   scope "/api", CumbucaWeb do
     pipe_through :api
 
     scope "/accounts" do
-      post "/", AccountController, :create
+      post "/create", AccountController, :create
       post "/login", AccountController, :login
+
+      scope "/transactions" do
+        pipe_through :auth
+
+        get "/show", TransactionController, :show
+        post "create", TransactionController, :create
+      end
     end
   end
 

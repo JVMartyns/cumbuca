@@ -80,4 +80,8 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+  config :cumbuca, :token,
+    salt: System.fetch_env!("TOKEN_SALT"),
+    ttl: String.to_integer(System.fetch_env!("TOKEN_TTL"))
 end
