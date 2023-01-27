@@ -23,5 +23,5 @@ defmodule Cumbuca.Transactions do
 
   defdelegate preload_assoc(transaction, preloads), to: PreloadAssoc, as: :call
 
-  defdelegate update_transaction(transaction, attrs), to: UpdateTransaction, as: :call
+  defdelegate update_transaction(transaction, attrs, opts \\ []), to: UpdateTransaction, as: :call
 end

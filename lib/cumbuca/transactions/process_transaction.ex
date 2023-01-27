@@ -38,6 +38,14 @@ defmodule Cumbuca.Transactions.ProcessTransaction do
 
   defp update_transaction_status(_repo, %{preloads: transaction}) do
     datetime = %{DateTime.utc_now() | microsecond: {0, 0}}
-    Transactions.update_transaction(transaction, %{processed_at: datetime})
+    fields_to_preload = [:sender_account, :receiver_account]
+
+    case Transactions.update_transaction(transaction, %{processed_at: datetime}) do
+      {:ok, result} ->
+        {:ok, Repo.preload(result, fields_to_preload, force: true)}
+
+      error ->
+        error
+    end
   end
 end

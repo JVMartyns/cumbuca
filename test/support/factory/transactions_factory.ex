@@ -1,13 +1,14 @@
 defmodule Cumbuca.Factory.TransactionsFactory do
   alias Cumbuca.Transactions.Transaction
+  alias Cumbuca.Factory
 
   defmacro __using__(_args) do
     quote do
       def transaction_factory do
         %Transaction{
           id: Ecto.UUID.generate(),
-          sender_account_id: Ecto.UUID.generate(),
-          receiver_account_id: Ecto.UUID.generate(),
+          sender_account_id: Factory.insert(:account).id,
+          receiver_account_id: Factory.insert(:account).id,
           value: Decimal.new(100),
           chargeback?: false,
           reversed_transaction_id: nil,
