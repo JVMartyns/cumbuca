@@ -1,4 +1,5 @@
 defmodule CumbucaWeb.TransactionControllerTest do
+  alias Cumbuca.Accounts
   use CumbucaWeb.ConnCase
   import Cumbuca.Factory
 
@@ -84,6 +85,64 @@ defmodule CumbucaWeb.TransactionControllerTest do
                  "value" => "100"
                }
              } = response
+    end
+  end
+
+  describe "process_transaction/2" do
+    test "processes a transaction by id", %{conn: conn} do
+      %{id: sender_account_id, cpf: sender_account_cpf} = sender_account = insert(:account)
+      %{id: receiver_account_id, cpf: receiver_account_cpf} = receiver_account = insert(:account)
+
+      sender_account_name = "#{sender_account.first_name} #{sender_account.last_name}"
+      receiver_account_name = "#{receiver_account.first_name} #{receiver_account.last_name}"
+
+      %{id: transaction_id} =
+        transaction =
+        insert(:transaction,
+          sender_account_id: sender_account_id,
+          receiver_account_id: receiver_account_id
+        )
+
+      request_body = %{
+        "transaction_id" => transaction_id
+      }
+
+      token = CumbucaWeb.Token.create(sender_account)
+
+      response =
+        conn
+        |> put_req_header("authorization", "Bearer " <> token)
+        |> post(Routes.transaction_path(conn, :process_transaction, request_body))
+        |> json_response(200)
+
+      assert %{
+               "data" => %{
+                 "id" => ^transaction_id,
+                 "receiver_account" => %{
+                   "cpf" => ^receiver_account_cpf,
+                   "name" => ^receiver_account_name
+                 },
+                 "sender_account" => %{
+                   "cpf" => ^sender_account_cpf,
+                   "name" => ^sender_account_name
+                 },
+                 "value" => "100",
+                 "processed_at" => processed_at,
+                 "chargeback?" => false,
+                 "reversed_transaction_id" => nil
+               }
+             } = response
+
+      assert not is_nil(processed_at)
+
+      {:ok, updated_sender_account} = Accounts.get_account_by_id(sender_account_id)
+      {:ok, updated_receiver_account} = Accounts.get_account_by_id(receiver_account_id)
+
+      assert updated_sender_account.balance ==
+               Decimal.sub(sender_account.balance, transaction.value)
+
+      assert updated_receiver_account.balance ==
+               Decimal.add(receiver_account.balance, transaction.value)
     end
   end
 end
