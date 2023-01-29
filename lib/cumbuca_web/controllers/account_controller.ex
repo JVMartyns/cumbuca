@@ -23,4 +23,12 @@ defmodule CumbucaWeb.AccountController do
       _ -> {:error, :unauthorized}
     end
   end
+
+  def show(%{assigns: %{account_id: id}} = conn, _params) do
+    with {:ok, account} <- Accounts.get_account_by_id(id) do
+      conn
+      |> put_status(:ok)
+      |> render("show.json", account: account)
+    end
+  end
 end

@@ -20,6 +20,12 @@ defmodule CumbucaWeb.TransactionController do
       conn
       |> put_status(:created)
       |> render("show.json", transaction: preloaded)
+    else
+      {:error, reason} ->
+        {:error, 422, reason}
+
+      error ->
+        error
     end
   end
 

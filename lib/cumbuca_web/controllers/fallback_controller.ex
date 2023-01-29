@@ -1,17 +1,25 @@
 defmodule CumbucaWeb.FallbackController do
   use CumbucaWeb, :controller
+  alias CumbucaWeb.{ErrorView, ChangesetView}
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:unprocessable_entity)
-    |> put_view(CumbucaWeb.ChangesetView)
+    |> put_view(ChangesetView)
     |> render("error.json", changeset: changeset)
   end
 
   def call(conn, {:error, :unauthorized}) do
     conn
     |> put_status(:unauthorized)
-    |> put_view(CumbucaWeb.ErrorView)
+    |> put_view(ErrorView)
     |> render("401.json")
+  end
+
+  def call(conn, {:error, status, message}) do
+    conn
+    |> put_status(status)
+    |> put_view(ErrorView)
+    |> render("error_message.json", message: message)
   end
 end

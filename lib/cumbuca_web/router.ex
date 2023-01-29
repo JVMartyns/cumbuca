@@ -15,12 +15,17 @@ defmodule CumbucaWeb.Router do
     scope "/accounts" do
       post "/create", AccountController, :create
       post "/login", AccountController, :login
+    end
+
+    scope "/accounts" do
+      pipe_through :auth
+
+      get "/show", AccountController, :show
 
       scope "/transactions" do
-        pipe_through :auth
-
         get "/show", TransactionController, :show
         post "/create", TransactionController, :create
+        post "/process", TransactionController, :process_transaction
       end
     end
   end

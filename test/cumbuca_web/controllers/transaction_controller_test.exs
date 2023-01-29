@@ -5,7 +5,10 @@ defmodule CumbucaWeb.TransactionControllerTest do
   describe "show/2" do
     test "show all transactions", %{conn: conn} do
       %{id: sender_account_id, cpf: sender_account_cpf} = sender_account = insert(:account)
-      %{id: receiver_account_id, cpf: receiver_account_cpf} = insert(:account, cpf: "69441939064")
+      %{id: receiver_account_id, cpf: receiver_account_cpf} = receiver_account = insert(:account)
+
+      sender_account_name = "#{sender_account.first_name} #{sender_account.last_name}"
+      receiver_account_name = "#{receiver_account.first_name} #{receiver_account.last_name}"
 
       %{id: transaction_id} =
         insert(:transaction,
@@ -27,8 +30,14 @@ defmodule CumbucaWeb.TransactionControllerTest do
                    "chargeback?" => false,
                    "id" => ^transaction_id,
                    "processed_at" => _processed_at,
-                   "sender_account" => ^sender_account_cpf,
-                   "receiver_account" => ^receiver_account_cpf,
+                   "sender_account" => %{
+                     "cpf" => ^sender_account_cpf,
+                     "name" => ^sender_account_name
+                   },
+                   "receiver_account" => %{
+                     "cpf" => ^receiver_account_cpf,
+                     "name" => ^receiver_account_name
+                   },
                    "reversed_transaction_id" => nil,
                    "value" => "100"
                  }
@@ -40,7 +49,10 @@ defmodule CumbucaWeb.TransactionControllerTest do
   describe "create/2" do
     test "create transaction", %{conn: conn} do
       %{cpf: sender_account_cpf} = sender_account = insert(:account)
-      %{cpf: receiver_account_cpf} = insert(:account)
+      %{cpf: receiver_account_cpf} = receiver_account = insert(:account)
+
+      sender_account_name = "#{sender_account.first_name} #{sender_account.last_name}"
+      receiver_account_name = "#{receiver_account.first_name} #{receiver_account.last_name}"
 
       token = CumbucaWeb.Token.create(sender_account)
 
@@ -59,8 +71,14 @@ defmodule CumbucaWeb.TransactionControllerTest do
                "data" => %{
                  "id" => _id,
                  "processed_at" => nil,
-                 "sender_account" => ^sender_account_cpf,
-                 "receiver_account" => ^receiver_account_cpf,
+                 "sender_account" => %{
+                   "cpf" => ^sender_account_cpf,
+                   "name" => ^sender_account_name
+                 },
+                 "receiver_account" => %{
+                   "cpf" => ^receiver_account_cpf,
+                   "name" => ^receiver_account_name
+                 },
                  "reversed_transaction_id" => nil,
                  "chargeback?" => false,
                  "value" => "100"

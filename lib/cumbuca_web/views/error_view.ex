@@ -11,6 +11,10 @@ defmodule CumbucaWeb.ErrorView do
   # the template name. For example, "404.json" becomes
   # "Not Found".
 
+  def render("error_message.json", %{message: message}) do
+    %{errors: %{message: message}}
+  end
+
   def template_not_found(template, _assigns) do
     %{errors: %{detail: Phoenix.Controller.status_message_from_template(template)}}
   end
