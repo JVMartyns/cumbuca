@@ -12,14 +12,10 @@ defmodule CumbucaWeb.TransactionController do
   end
 
   def create(%{assigns: %{account_id: id}} = conn, %{"cpf" => cpf, "value" => value}) do
-    preloads = [:sender_account, :receiver_account]
-
-    with {:ok, builded} <- Transactions.build_transaction(id, cpf, value),
-         {:ok, transaction} <- Transactions.insert_transaction(builded),
-         {:ok, preloaded} <- Transactions.preload_assoc(transaction, preloads) do
+    with {:ok, transaction} <- Transactions.create_transaction(id, cpf, value) do
       conn
       |> put_status(:created)
-      |> render("show.json", transaction: preloaded)
+      |> render("show.json", transaction: transaction)
     else
       {:error, reason} ->
         {:error, 422, reason}
