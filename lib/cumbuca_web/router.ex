@@ -20,7 +20,7 @@ defmodule CumbucaWeb.Router do
         pipe_through :auth
 
         get "/show", TransactionController, :show
-        post "create", TransactionController, :create
+        post "/create", TransactionController, :create
       end
     end
   end

@@ -39,7 +39,7 @@ defmodule Cumbuca.Accounts.CreateAccountTest do
       invalid_params = %{@valid_params | cpf: "123"}
       assert {:error, changeset} = CreateAccount.call(invalid_params)
 
-      assert errors_on(changeset) == %{cpf: ["has invalid format"]}
+      assert errors_on(changeset) == %{cpf: ["is invalid", "has invalid format"]}
     end
 
     test "when params are invalid" do

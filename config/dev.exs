@@ -59,7 +59,3 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
-
-config :cumbuca, :token,
-  salt: System.get_env("TOKEN_SALT", "aBBG28Kxn1JWuaxyiZBgoYSpR//ybu9STnRE2UdYOw0="),
-  ttl: String.to_integer(System.get_env("TOKEN_TTL", "86400"))

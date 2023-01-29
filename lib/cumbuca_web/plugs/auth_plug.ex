@@ -11,9 +11,8 @@ defmodule CumbucaWeb.AuthPlug do
          {:ok, %{id: account_id}} <- Token.verify(token) do
       assign(conn, :account_id, account_id)
     else
-      error ->
+      _error ->
         handle_error(conn)
-        IO.inspect(error)
     end
   end
 

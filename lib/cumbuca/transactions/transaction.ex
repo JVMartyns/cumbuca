@@ -16,7 +16,7 @@ defmodule Cumbuca.Transactions.Transaction do
 
     belongs_to :sender_account, Account
     belongs_to :receiver_account, Account
-    belongs_to :reversed_transaction, Account
+    belongs_to :reversed_transaction, __MODULE__
 
     timestamps()
   end

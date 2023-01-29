@@ -56,7 +56,7 @@ defmodule CumbucaWeb.AccountControllerTest do
         |> post(Routes.account_path(conn, :create, invalid_params))
         |> json_response(422)
 
-      expected_response = %{"errors" => %{"cpf" => ["has invalid format"]}}
+      expected_response = %{"errors" => %{"cpf" => ["is invalid", "has invalid format"]}}
 
       assert response == expected_response
     end
