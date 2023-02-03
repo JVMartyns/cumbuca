@@ -100,7 +100,8 @@ defmodule CumbucaWeb.TransactionControllerTest do
         transaction =
         insert(:transaction,
           sender_account_id: sender_account_id,
-          receiver_account_id: receiver_account_id
+          receiver_account_id: receiver_account_id,
+          processed_at: nil
         )
 
       request_body = %{
@@ -112,7 +113,7 @@ defmodule CumbucaWeb.TransactionControllerTest do
       response =
         conn
         |> put_req_header("authorization", "Bearer " <> token)
-        |> post(Routes.transaction_path(conn, :process_transaction, request_body))
+        |> post(Routes.transaction_path(conn, :process, request_body))
         |> json_response(200)
 
       assert %{

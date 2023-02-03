@@ -12,7 +12,8 @@ defmodule Cumbuca.Transactions.ProcessTransactionTest do
       %{id: transaction_id} =
         insert(:transaction,
           sender_account_id: sender_account_id,
-          receiver_account_id: receiver_account_id
+          receiver_account_id: receiver_account_id,
+          processed_at: nil
         )
 
       assert {:ok,

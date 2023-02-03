@@ -1,6 +1,5 @@
 defmodule CumbucaWeb.TransactionController do
   use CumbucaWeb, :controller
-  # alias Cumbuca.Accounts
   alias Cumbuca.Transactions
 
   action_fallback CumbucaWeb.FallbackController
@@ -25,11 +24,19 @@ defmodule CumbucaWeb.TransactionController do
     end
   end
 
-  def process_transaction(conn, %{"transaction_id" => transaction_id}) do
+  def process(conn, %{"transaction_id" => transaction_id}) do
     with {:ok, transaction} <- Transactions.process_transaction(transaction_id) do
       conn
       |> put_status(:ok)
       |> render("show.json", transaction: transaction)
+    end
+  end
+
+  def chargeback(conn, %{"transaction_id" => transaction_id}) do
+    with {:ok, chargeback} <- Transactions.process_chargeback(transaction_id) do
+      conn
+      |> put_status(:ok)
+      |> render("show.json", transaction: chargeback)
     end
   end
 end

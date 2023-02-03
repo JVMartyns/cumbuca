@@ -1,4 +1,4 @@
-defmodule Cumbuca.Transactions.BuildTransaction do
+defmodule Cumbuca.Transactions.BuildTransference do
   alias Cumbuca.Accounts
   alias Cumbuca.Transactions.Transaction
 

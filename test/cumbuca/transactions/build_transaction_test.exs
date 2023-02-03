@@ -1,7 +1,7 @@
-defmodule Cumbuca.Transactions.BuildTransactionTest do
+defmodule Cumbuca.Transactions.BuildTransferenceTest do
   use Cumbuca.DataCase
   import Cumbuca.Factory
-  alias Cumbuca.Transactions.{Transaction, BuildTransaction}
+  alias Cumbuca.Transactions.{Transaction, BuildTransference}
 
   describe "call/1" do
     test "when all params are valid" do
@@ -10,7 +10,8 @@ defmodule Cumbuca.Transactions.BuildTransactionTest do
       value = 100
       decimal_value = Decimal.new(value)
 
-      assert {:ok, result} = BuildTransaction.call(sender_account_id, receiver_account_cpf, value)
+      assert {:ok, result} =
+               BuildTransference.call(sender_account_id, receiver_account_cpf, value)
 
       assert %Transaction{
                sender_account_id: ^sender_account_id,
@@ -27,7 +28,7 @@ defmodule Cumbuca.Transactions.BuildTransactionTest do
       %{cpf: receiver_account_cpf} = insert(:account)
       value = 100
 
-      assert BuildTransaction.call(sender_account_id, receiver_account_cpf, value) ==
+      assert BuildTransference.call(sender_account_id, receiver_account_cpf, value) ==
                {:error, :insuficiente_founds}
     end
   end

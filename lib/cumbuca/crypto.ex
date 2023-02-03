@@ -3,26 +3,30 @@ defmodule Cumbuca.Crypto do
 
   @spec encrypt(any, String.t()) :: String.t()
   def encrypt(term_to_encrypt, key \\ secret()) do
+    initial_vector = :crypto.strong_rand_bytes(16)
+
     encrypted_binary =
       :crypto.crypto_one_time(
         @encryption_algorithm,
         :base64.decode(key),
-        :base64.decode(iv()),
+        initial_vector,
         :erlang.term_to_binary(term_to_encrypt),
         true
       )
 
-    :base64.encode(encrypted_binary)
+    :base64.encode(initial_vector <> encrypted_binary)
   end
 
   @spec decrypt(String.t(), String.t()) :: String.t()
   def decrypt(encrypted_term, key \\ secret()) do
+    <<initial_vector::binary-16, binary_to_decrypt::binary>> = :base64.decode(encrypted_term)
+
     decrypted_binary =
       :crypto.crypto_one_time(
         @encryption_algorithm,
         :base64.decode(key),
-        :base64.decode(iv()),
-        :base64.decode(encrypted_term),
+        initial_vector,
+        binary_to_decrypt,
         false
       )
 
@@ -30,5 +34,4 @@ defmodule Cumbuca.Crypto do
   end
 
   defp secret, do: Application.fetch_env!(:cumbuca, :crypto)[:secret]
-  defp iv, do: Application.fetch_env!(:cumbuca, :crypto)[:iv]
 end
