@@ -85,7 +85,5 @@ if config_env() == :prod do
     salt: System.fetch_env!("TOKEN_SALT"),
     ttl: String.to_integer(System.fetch_env!("TOKEN_TTL"))
 
-  config :cumbuca, :crypto,
-    secret: System.fetch_env!("CRYPTO_SECRET"),
-    iv: System.fetch_env!("CRYPTO_IV")
+  config :cumbuca, :crypto, secret: System.fetch_env!("CRYPTO_SECRET")
 end

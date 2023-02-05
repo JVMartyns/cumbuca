@@ -10,7 +10,7 @@ defmodule CumbucaWeb.TransactionController do
     |> render("show.json", transactions: Transactions.get_all_transactions(id))
   end
 
-  def create(%{assigns: %{account_id: id}} = conn, %{"cpf" => cpf, "value" => value}) do
+  def create_transference(%{assigns: %{account_id: id}} = conn, %{"cpf" => cpf, "value" => value}) do
     with {:ok, transaction} <- Transactions.create_transaction(id, cpf, value) do
       conn
       |> put_status(:created)
@@ -32,11 +32,9 @@ defmodule CumbucaWeb.TransactionController do
     end
   end
 
-  def chargeback(conn, %{"transaction_id" => transaction_id}) do
-    with {:ok, chargeback} <- Transactions.process_chargeback(transaction_id) do
-      conn
-      |> put_status(:ok)
-      |> render("show.json", transaction: chargeback)
+  def chargeback(%{assigns: %{account_id: id}} = conn, %{"transaction_id" => transaction_id}) do
+    with {:ok, chargeback} <- Transactions.create_chargeback(id, transaction_id) do
+      process(conn, %{"transaction_id" => chargeback.id})
     end
   end
 end

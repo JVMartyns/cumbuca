@@ -65,7 +65,7 @@ defmodule CumbucaWeb.TransactionControllerTest do
       response =
         conn
         |> put_req_header("authorization", "Bearer " <> token)
-        |> post(Routes.transaction_path(conn, :create, request_body))
+        |> post(Routes.transaction_path(conn, :create_transference, request_body))
         |> json_response(201)
 
       assert %{
@@ -144,6 +144,53 @@ defmodule CumbucaWeb.TransactionControllerTest do
 
       assert updated_receiver_account.balance ==
                Decimal.add(receiver_account.balance, transaction.value)
+    end
+  end
+
+  describe "" do
+    test "", %{conn: conn} do
+      %{id: sender_account_id, cpf: sender_account_cpf} = sender_account = insert(:account)
+      %{id: receiver_account_id, cpf: receiver_account_cpf} = receiver_account = insert(:account)
+
+      sender_account_name = "#{sender_account.first_name} #{sender_account.last_name}"
+      receiver_account_name = "#{receiver_account.first_name} #{receiver_account.last_name}"
+
+      %{id: transaction_id} =
+        insert(:transaction,
+          sender_account_id: sender_account_id,
+          receiver_account_id: receiver_account_id,
+          processed_at: nil
+        )
+
+      request_body = %{
+        "transaction_id" => transaction_id
+      }
+
+      token = CumbucaWeb.Token.create(receiver_account)
+
+      response =
+        conn
+        |> put_req_header("authorization", "Bearer " <> token)
+        |> post(Routes.transaction_path(conn, :chargeback, request_body))
+        |> json_response(200)
+
+      assert %{
+               "data" => %{
+                 "chargeback?" => true,
+                 "id" => _id,
+                 "processed_at" => _processed_at,
+                 "receiver_account" => %{
+                   "cpf" => ^sender_account_cpf,
+                   "name" => ^sender_account_name
+                 },
+                 "reversed_transaction_id" => ^transaction_id,
+                 "sender_account" => %{
+                   "cpf" => ^receiver_account_cpf,
+                   "name" => ^receiver_account_name
+                 },
+                 "value" => "100"
+               }
+             } = response
     end
   end
 end

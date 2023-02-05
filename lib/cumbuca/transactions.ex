@@ -3,10 +3,12 @@ defmodule Cumbuca.Transactions do
     CreateTransaction,
     GetAllTransactions,
     GetTransactionById,
+    CreateChargeback,
+    BuildChargeback,
     BuildTransference,
     InsertTransaction,
     PreloadAssoc,
-    ProcessChargeback,
+    # ProcessChargeback,
     ProcessTransaction,
     UpdateTransaction
   }
@@ -19,12 +21,19 @@ defmodule Cumbuca.Transactions do
     to: CreateTransaction,
     as: :call
 
+  defdelegate create_chargeback(current_account_id, transaction_id),
+    to: CreateChargeback,
+    as: :call
+
   defdelegate build_transaction(sender_account_id, receiver_account_cpf, value),
     to: BuildTransference,
     as: :call
 
+  defdelegate build_chargeback(current_account_id, transaction),
+    to: BuildChargeback,
+    as: :call
+
   defdelegate insert_transaction(transaction), to: InsertTransaction, as: :call
-  defdelegate process_chargeback(transaction_id), to: ProcessChargeback, as: :call
   defdelegate process_transaction(transaction_id), to: ProcessTransaction, as: :call
 
   defdelegate preload_assoc(transaction, preloads), to: PreloadAssoc, as: :call

@@ -24,8 +24,9 @@ defmodule CumbucaWeb.Router do
 
       scope "/transactions" do
         get "/show", TransactionController, :show
-        post "/create", TransactionController, :create
+        post "/create", TransactionController, :create_transference
         post "/process", TransactionController, :process
+        post "/chargeback", TransactionController, :chargeback
       end
     end
   end
