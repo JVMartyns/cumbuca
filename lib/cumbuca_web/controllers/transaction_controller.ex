@@ -11,30 +11,36 @@ defmodule CumbucaWeb.TransactionController do
   end
 
   def create_transference(%{assigns: %{account_id: id}} = conn, %{"cpf" => cpf, "value" => value}) do
-    with {:ok, transaction} <- Transactions.create_transaction(id, cpf, value) do
-      conn
-      |> put_status(:created)
-      |> render("show.json", transaction: transaction)
-    else
+    case Transactions.create_transaction(id, cpf, value) do
+      {:ok, transaction} ->
+        conn
+        |> put_status(:created)
+        |> render("show.json", transaction: transaction)
+
       {:error, reason} ->
         {:error, 422, reason}
-
-      error ->
-        error
     end
   end
 
   def process(conn, %{"transaction_id" => transaction_id}) do
-    with {:ok, transaction} <- Transactions.process_transaction(transaction_id) do
-      conn
-      |> put_status(:ok)
-      |> render("show.json", transaction: transaction)
+    case Transactions.process_transaction(transaction_id) do
+      {:ok, transaction} ->
+        conn
+        |> put_status(:ok)
+        |> render("show.json", transaction: transaction)
+
+      {:error, reason} ->
+        {:error, 422, reason}
     end
   end
 
   def chargeback(%{assigns: %{account_id: id}} = conn, %{"transaction_id" => transaction_id}) do
-    with {:ok, chargeback} <- Transactions.create_chargeback(id, transaction_id) do
-      process(conn, %{"transaction_id" => chargeback.id})
+    case Transactions.create_chargeback(id, transaction_id) do
+      {:ok, chargeback} ->
+        process(conn, %{"transaction_id" => chargeback.id})
+
+      {:error, reason} ->
+        {:error, 422, reason}
     end
   end
 end
