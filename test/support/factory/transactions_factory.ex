@@ -1,6 +1,6 @@
 defmodule Cumbuca.Factory.TransactionsFactory do
-  alias Cumbuca.Transactions.Transaction
   alias Cumbuca.Factory
+  alias Cumbuca.Transactions.Transaction
 
   defmacro __using__(_args) do
     quote do

@@ -1,8 +1,7 @@
 defmodule CumbucaWeb.AuthPlug do
   import Plug.Conn
+  alias CumbucaWeb.{ErrorView, Token}
   alias Phoenix.Controller
-  alias CumbucaWeb.Token
-  alias CumbucaWeb.ErrorView
 
   def init(opts), do: opts
 

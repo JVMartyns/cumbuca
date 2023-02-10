@@ -1,7 +1,7 @@
 defmodule Cumbuca.Transactions.BuildTransferenceTest do
   use Cumbuca.DataCase
   import Cumbuca.Factory
-  alias Cumbuca.Transactions.{Transaction, BuildTransference}
+  alias Cumbuca.Transactions.{BuildTransference, Transaction}
 
   describe "call/1" do
     test "when all params are valid" do

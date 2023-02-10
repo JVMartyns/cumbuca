@@ -1,6 +1,6 @@
 defmodule Cumbuca.Transactions.GetAllTransactionsTest do
   use Cumbuca.DataCase
-  alias Cumbuca.Transactions.{Transaction, GetAllTransactions}
+  alias Cumbuca.Transactions.{GetAllTransactions, Transaction}
   import Cumbuca.Factory
 
   describe "call/1" do
