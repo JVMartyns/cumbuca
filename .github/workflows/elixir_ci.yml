@@ -11,11 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      cumbuca_db:
+      postgres:
         image: postgres:14
         ports:
           - "5432:5432"
         env:
+          POSTGRES_HOST: cumbuca_db
           POSTGRES_DB: cumbuca_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
