@@ -8,7 +8,7 @@ import Config
 config :cumbuca, Cumbuca.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "cumbuca_db",
+  hostname: "localhost",
   database: "cumbuca_test",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
