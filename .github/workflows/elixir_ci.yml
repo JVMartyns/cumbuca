@@ -37,7 +37,13 @@ jobs:
           cp .env-sample .env
 
       - name: Build image
-        run: make build
+        run: DOCKER_BUILDKIT=1 docker build -t cumbuca --ssh default --no-cache --build-arg MIX_ENV=test .
+
+      - name: Load Docker image
+        run: docker load --input /tmp/image.tar
+
+      - name: Start containers
+        run: docker-compose up -d ampera_db
 
       - name: Run tests
         run: docker compose run --rm cumbuca mix test
