@@ -15,6 +15,7 @@ services:
       - .env
     volumes:
      - ./:/app/
+     
   cumbuca_db:
     container_name: cumbuca_db
     image: postgres
