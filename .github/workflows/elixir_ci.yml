@@ -16,6 +16,7 @@ jobs:
         ports:
           - "5432:5432"
         env:
+          POSTGRES_HOST: cumbuca_db
           POSTGRES_DB: cumbuca_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
