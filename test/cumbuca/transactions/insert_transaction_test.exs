@@ -1,6 +1,6 @@
 defmodule Cumbuca.Transactions.InsertTransactionTest do
   use Cumbuca.DataCase
-  alias Cumbuca.Transactions.{Transaction, InsertTransaction}
+  alias Cumbuca.Transactions.{InsertTransaction, Transaction}
   import Cumbuca.Factory
 
   describe "call/1" do

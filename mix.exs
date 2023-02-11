@@ -10,7 +10,16 @@ defmodule Cumbuca.MixProject do
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "ecto.reset.test": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test,
+        ci: :test
+      ]
     ]
   end
 
@@ -43,8 +52,10 @@ defmodule Cumbuca.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:cpf, git: "https://github.com/JVMartyns/elixir_cpf.git", tag: "0.1.1"},
-      {:ex_machina, "~> 2.7.0", only: :test}
+      {:cpf, git: "git@github.com:JVMartyns/elixir_cpf.git", tag: "0.1.1"},
+      {:ex_machina, "~> 2.7.0", only: :test},
+      {:excoveralls, "~> 0.10", only: :test},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -59,7 +70,14 @@ defmodule Cumbuca.MixProject do
       setup: ["deps.get", "ecto.setup"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      ci: [
+        "format --check-formatted",
+        "credo --strict",
+        "ecto.rollback --all",
+        "ecto.migrate",
+        "coveralls"
+      ]
     ]
   end
 end

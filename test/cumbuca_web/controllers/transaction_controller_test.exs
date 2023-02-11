@@ -45,6 +45,105 @@ defmodule CumbucaWeb.TransactionControllerTest do
                ]
              } = response
     end
+
+    test "search date by period", %{conn: conn} do
+      %{id: sender_account_id, cpf: sender_account_cpf} = sender_account = insert(:account)
+      %{id: receiver_account_id, cpf: receiver_account_cpf} = receiver_account = insert(:account)
+
+      insert(:transaction,
+        sender_account_id: sender_account_id,
+        receiver_account_id: receiver_account_id,
+        processed_at: ~U[2023-02-07 20:30:52Z]
+      )
+
+      insert(:transaction,
+        sender_account_id: sender_account_id,
+        receiver_account_id: receiver_account_id,
+        processed_at: ~U[2023-02-08 20:30:52Z]
+      )
+
+      insert(:transaction,
+        sender_account_id: sender_account_id,
+        receiver_account_id: receiver_account_id,
+        processed_at: ~U[2023-02-09 20:30:52Z]
+      )
+
+      insert(:transaction,
+        sender_account_id: sender_account_id,
+        receiver_account_id: receiver_account_id,
+        processed_at: ~U[2023-02-10 20:30:52Z]
+      )
+
+      token = CumbucaWeb.Token.create(sender_account)
+
+      response_to_initial_date =
+        conn
+        |> put_req_header("authorization", "Bearer " <> token)
+        |> get(Routes.transaction_path(conn, :show, %{"initial_date" => "2023-02-09"}))
+        |> json_response(200)
+
+      assert [
+               %{"processed_at" => "2023-02-09T20:30:52Z"},
+               %{"processed_at" => "2023-02-10T20:30:52Z"}
+             ] = response_to_initial_date["data"]
+
+      response_to_final_date =
+        conn
+        |> put_req_header("authorization", "Bearer " <> token)
+        |> get(Routes.transaction_path(conn, :show, %{"final_date" => "2023-02-08"}))
+        |> json_response(200)
+
+      assert [
+               %{"processed_at" => "2023-02-07T20:30:52Z"},
+               %{"processed_at" => "2023-02-08T20:30:52Z"}
+             ] = response_to_final_date["data"]
+
+      period = %{
+        "initial_date" => "2023-02-08",
+        "final_date" => "2023-02-09"
+      }
+
+      response_to_period =
+        conn
+        |> put_req_header("authorization", "Bearer " <> token)
+        |> get(Routes.transaction_path(conn, :show, period))
+        |> json_response(200)
+
+      assert [
+               %{"processed_at" => "2023-02-08T20:30:52Z"},
+               %{"processed_at" => "2023-02-09T20:30:52Z"}
+             ] = response_to_period["data"]
+    end
+
+    test "when the search date has an invalid format, ignore the parameter", %{conn: conn} do
+      %{id: sender_account_id, cpf: sender_account_cpf} = sender_account = insert(:account)
+      %{id: receiver_account_id, cpf: receiver_account_cpf} = receiver_account = insert(:account)
+
+      insert(:transaction,
+        sender_account_id: sender_account_id,
+        receiver_account_id: receiver_account_id,
+        processed_at: ~U[2023-02-07 20:30:52Z]
+      )
+
+      insert(:transaction,
+        sender_account_id: sender_account_id,
+        receiver_account_id: receiver_account_id,
+        processed_at: ~U[2023-02-08 20:30:52Z]
+      )
+
+      token = CumbucaWeb.Token.create(sender_account)
+
+      response_to_initial_date =
+        conn
+        |> put_req_header("authorization", "Bearer " <> token)
+        |> get(Routes.transaction_path(conn, :show, %{"initial_date" => "invalid_value"}))
+        |> json_response(200)
+
+      assert [
+               %{"processed_at" => "2023-02-07T20:30:52Z"},
+               %{"processed_at" => "2023-02-08T20:30:52Z"}
+             ] = response_to_initial_date["data"]
+    end
   end
 
   describe "create/2" do

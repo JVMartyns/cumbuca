@@ -1,19 +1,32 @@
 # Cumbuca
 
-To start your Phoenix server:
+Desafios de Contratação Cumbuca Backend
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+- [Documentação do desafio](https://github.com/appcumbuca/desafios/blob/master/desafio-back-end.md)
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+API de conta bancária:
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+- [Documentação da API](https://documenter.getpostman.com/view/20194093/2s935rKNiR) disponível no Gigalixir.
 
-## Learn more
+### Como executar a aplicação localmente:
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+Requisitos:
+
+- [Docker](https://docs.docker.com/get-docker/) - versão 23.0 ou superior
+- [Docker Compose](https://docs.docker.com/compose/) - versão 2.15 ou superior
+
+Construir o container
+
+```
+make build
+```
+
+Iniciar a aplicação
+
+```
+docker compose up
+```
+
+A aplicação está executando em [`localhost:4000`](http://localhost:4000)
+
+Você poderá acessar os mesmos endpoints encontrados na [documentação da API](https://documenter.getpostman.com/view/20194093/2s935rKNiR).

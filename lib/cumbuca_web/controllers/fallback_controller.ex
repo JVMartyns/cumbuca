@@ -1,6 +1,6 @@
 defmodule CumbucaWeb.FallbackController do
   use CumbucaWeb, :controller
-  alias CumbucaWeb.{ErrorView, ChangesetView}
+  alias CumbucaWeb.{ChangesetView, ErrorView}
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn

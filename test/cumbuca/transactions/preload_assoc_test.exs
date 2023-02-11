@@ -1,7 +1,7 @@
 defmodule Cumbuca.Transactions.PreloadAssocTest do
   use Cumbuca.DataCase
   import Cumbuca.Factory
-  alias Cumbuca.Transactions.{Transaction, PreloadAssoc}
+  alias Cumbuca.Transactions.{PreloadAssoc, Transaction}
 
   describe "call/1" do
     test "load associated accounts" do

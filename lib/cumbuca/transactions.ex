@@ -16,6 +16,7 @@ defmodule Cumbuca.Transactions do
   defdelegate get_transaction_by_id(transaction_id), to: GetTransactionById, as: :call
 
   defdelegate get_all_transactions(account_id), to: GetAllTransactions, as: :call
+  defdelegate get_all_transactions(account_id, opts), to: GetAllTransactions, as: :call
 
   defdelegate create_transaction(sender_account_id, receiver_account_cpf, value),
     to: CreateTransaction,

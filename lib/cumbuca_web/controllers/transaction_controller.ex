@@ -1,13 +1,21 @@
 defmodule CumbucaWeb.TransactionController do
   use CumbucaWeb, :controller
+  alias Cumbuca.Common
   alias Cumbuca.Transactions
 
   action_fallback CumbucaWeb.FallbackController
 
-  def show(%{assigns: %{account_id: id}} = conn, _attrs) do
+  def show(%{assigns: %{account_id: account_id}} = conn, _attrs) do
+    opts = [
+      initial_date: Common.external_to_internal(:date, conn.query_params["initial_date"]),
+      final_date: Common.external_to_internal(:date, conn.query_params["final_date"])
+    ]
+
+    transactions_list = Transactions.get_all_transactions(account_id, opts)
+
     conn
     |> put_status(:ok)
-    |> render("show.json", transactions: Transactions.get_all_transactions(id))
+    |> render("show.json", transactions: transactions_list)
   end
 
   def create_transference(%{assigns: %{account_id: id}} = conn, %{"cpf" => cpf, "value" => value}) do
