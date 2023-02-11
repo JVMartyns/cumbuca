@@ -40,7 +40,7 @@ jobs:
         run: DOCKER_BUILDKIT=1 docker build -t cumbuca --ssh default --no-cache --build-arg MIX_ENV=test .
 
       - name: Start containers
-        run: docker-compose up -d ampera_db
+        run: docker-compose up -d cumbuca_db
 
       - name: Run tests
         run: docker compose run --rm cumbuca mix test
