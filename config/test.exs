@@ -9,7 +9,7 @@ config :cumbuca, Cumbuca.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "cumbuca_db",
-  database: "cumbuca_test#{System.get_env("MIX_TEST_PARTITION")}",
+  database: "cumbuca_test",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
