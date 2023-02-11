@@ -48,7 +48,9 @@ jobs:
           tags: cumbuca:latest
           build-args: MIX_ENV=test
           cache-from: type=registry,ref=ghcr.io/JVMartyns/cumbuca/main-cache:latest
-          outputs: type=docker,dest=/tmp/image.tar
+          outputs: type=docker, dest=/tmp/image.tar
+          ssh: |
+            default=${{ env.SSH_AUTH_SOCK }}
 
       - name: Load Docker image
         run: docker load --input /tmp/image.tar
