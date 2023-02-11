@@ -44,7 +44,6 @@ jobs:
         with:
           push: false
           context: .
-          target: build
           file: ./Dockerfile
           tags: cumbuca:latest
           build-args: MIX_ENV=test
