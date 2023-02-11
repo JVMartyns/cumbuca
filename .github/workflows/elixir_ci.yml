@@ -21,6 +21,12 @@ jobs:
           POSTGRES_PASSWORD: postgres
 
     steps:
+      - name: Setting up SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: |
+            ${{ secrets.SSH_PRIVATE_KEY }}
+
       - uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
@@ -34,12 +40,6 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-
-
-      - name: Setting up SSH
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: |
-            ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Install dependencies
         run: mix deps.get
