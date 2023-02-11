@@ -9,12 +9,12 @@ services:
       - "4000:4000"
     depends_on:
       - cumbuca_db
-    links:
-      - cumbuca_db
     env_file:
       - .env
     volumes:
      - ./:/app/
+    networks:
+      - cumbuca
      
   cumbuca_db:
     container_name: cumbuca_db
@@ -24,3 +24,9 @@ services:
       POSTGRES_USER: postgres
     ports:
       - "5432:5432"
+    networks:
+      - cumbuca
+
+networks:
+  cumbuca:
+    name: cumbuca_network
