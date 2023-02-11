@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
+      cumbuca_db:
+      container_name: cumbuca_db
         image: postgres:14
         ports:
           - "5432:5432"
