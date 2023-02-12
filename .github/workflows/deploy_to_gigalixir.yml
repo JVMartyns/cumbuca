@@ -1,4 +1,8 @@
 name: Deployment
+on:
+  push:
+    branches:
+      - main
 
 deploy:
   if: github.ref == 'refs/heads/main'
