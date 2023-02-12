@@ -3,6 +3,8 @@ defmodule CumbucaWeb.Token do
   alias CumbucaWeb.Endpoint
   alias Phoenix.Token
 
+  @default_ttl 86400
+
   def create(%Account{id: id}) do
     Token.sign(Endpoint, salt(), %{id: id})
   end
@@ -18,5 +20,13 @@ defmodule CumbucaWeb.Token do
   end
 
   defp salt, do: Application.fetch_env!(:cumbuca, :token)[:salt]
-  defp ttl, do: Application.fetch_env!(:cumbuca, :token)[:ttl]
+
+  defp ttl do
+    :cumbuca
+    |> Application.fetch_env!(:token)
+    |> Map.get(:ttl)
+    |> String.to_integer()
+  rescue
+    _ -> @default_ttl
+  end
 end

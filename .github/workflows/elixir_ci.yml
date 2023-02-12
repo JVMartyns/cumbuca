@@ -33,8 +33,7 @@ jobs:
           restore-keys: ${{ runner.os }}-mix-
 
       - name: Create env file
-        run: |
-          cp .env-sample .env
+        run: cp .env-sample .env
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -49,8 +48,7 @@ jobs:
           build-args: MIX_ENV=test
           cache-from: type=registry,ref=ghcr.io/JVMartyns/cumbuca/main-cache:latest
           outputs: type=docker, dest=/tmp/image.tar
-          ssh: |
-            default=${{ env.SSH_AUTH_SOCK }}
+          ssh: default=${{ env.SSH_AUTH_SOCK }}
 
       - name: Load Docker image
         run: docker load --input /tmp/image.tar
