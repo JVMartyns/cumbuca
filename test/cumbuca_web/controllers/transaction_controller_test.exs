@@ -47,8 +47,8 @@ defmodule CumbucaWeb.TransactionControllerTest do
     end
 
     test "search date by period", %{conn: conn} do
-      %{id: sender_account_id, cpf: sender_account_cpf} = sender_account = insert(:account)
-      %{id: receiver_account_id, cpf: receiver_account_cpf} = receiver_account = insert(:account)
+      %{id: sender_account_id} = sender_account = insert(:account)
+      %{id: receiver_account_id} = insert(:account)
 
       insert(:transaction,
         sender_account_id: sender_account_id,
@@ -116,8 +116,8 @@ defmodule CumbucaWeb.TransactionControllerTest do
     end
 
     test "when the search date has an invalid format, ignore the parameter", %{conn: conn} do
-      %{id: sender_account_id, cpf: sender_account_cpf} = sender_account = insert(:account)
-      %{id: receiver_account_id, cpf: receiver_account_cpf} = receiver_account = insert(:account)
+      %{id: sender_account_id} = sender_account = insert(:account)
+      %{id: receiver_account_id} = insert(:account)
 
       insert(:transaction,
         sender_account_id: sender_account_id,
