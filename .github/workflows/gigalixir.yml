@@ -23,7 +23,7 @@ jobs:
 
       - uses: mhanberg/gigalixir-action@v0.6.1
         with:
-          APP_SUBFOLDER: /app
+          # APP_SUBFOLDER: /app
           GIGALIXIR_APP: cumbuca
           GIGALIXIR_CLEAN: true
           GIGALIXIR_USERNAME: ${{ secrets.GIGALIXIR_USERNAME }}
