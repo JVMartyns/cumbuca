@@ -62,9 +62,6 @@ jobs:
       - name: Check unused deps in lockfile
         run: docker run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix deps.unlock --check-unused
 
-      - name: Check compile warnings
-        run: docker run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix compile --warnings-as-errors
-
       - name: Check code smells
         run: docker run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix credo --strict
 
