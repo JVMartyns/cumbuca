@@ -1,0 +1,72 @@
+name: Elixir CI
+
+on: pull_request
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setting up SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: |
+            ${{ secrets.SSH_SECRET_KEY }}
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: "1.14.0"
+          otp-version: "25.0"
+
+      - name: Restore dependencies cache
+        uses: actions/cache@v3
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+
+      - name: Create env file
+        run: cp .env-sample .env
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build image
+        uses: docker/build-push-action@v3
+        with:
+          push: false
+          context: .
+          file: ./Dockerfile
+          tags: cumbuca:latest
+          build-args: MIX_ENV=test
+          cache-from: type=registry,ref=ghcr.io/JVMartyns/cumbuca/main-cache:latest
+          outputs: type=docker, dest=/tmp/image.tar
+          ssh: default=${{ env.SSH_AUTH_SOCK }}
+
+      - name: Load Docker image
+        run: docker load --input /tmp/image.tar
+
+      - name: Start containers
+        run: docker-compose up -d cumbuca_db
+
+      - name: Code format
+        run: docker run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix format --check-formatted
+
+      - name: Check unused deps in lockfile
+        run: docker run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix deps.unlock --check-unused
+
+      - name: Check code smells
+        run: docker run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix credo --strict
+
+      - name: Check tests
+        run: docker run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix test --warnings-as-errors
+
+      - name: Migration rollback test
+        run: docker run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix do ecto.create, ecto.migrate, ecto.rollback --all

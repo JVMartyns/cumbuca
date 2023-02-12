@@ -1,4 +1,5 @@
 defmodule Cumbuca.Transactions.CreateTransaction do
+  @moduledoc false
   alias Cumbuca.Transactions
   alias Transactions.Transaction
 

@@ -1,4 +1,5 @@
 defmodule Cumbuca.Accounts.CheckBalance do
+  @moduledoc false
   alias Cumbuca.Accounts.Account
 
   def call(%Account{balance: balance}, value) do

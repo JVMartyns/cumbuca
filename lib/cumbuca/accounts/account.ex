@@ -1,4 +1,5 @@
 defmodule Cumbuca.Accounts.Account do
+  @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
   alias Cumbuca.EctoTypes.EncryptedString

@@ -1,4 +1,5 @@
 defmodule Cumbuca.EctoTypes.EncryptedString do
+  @moduledoc false
   use Ecto.Type
 
   def type, do: :string

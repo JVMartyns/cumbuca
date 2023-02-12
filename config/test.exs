@@ -9,7 +9,7 @@ config :cumbuca, Cumbuca.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "cumbuca_db",
-  database: "cumbuca_test#{System.get_env("MIX_TEST_PARTITION")}",
+  database: "cumbuca_test",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
@@ -31,4 +31,4 @@ config :phoenix, :plug_init_mode, :runtime
 
 config :cumbuca, :token,
   salt: System.get_env("TOKEN_SALT", "aBBG28Kxn1JWuaxyiZBgoYSpR//ybu9STnRE2UdYOw0="),
-  ttl: String.to_integer(System.get_env("TOKEN_TTL", "86400"))
+  ttl: System.get_env("TOKEN_TTL", "86400")

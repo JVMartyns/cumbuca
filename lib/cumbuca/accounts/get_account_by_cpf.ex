@@ -1,4 +1,5 @@
 defmodule Cumbuca.Accounts.GetAccountByCpf do
+  @moduledoc false
   import Ecto.Query
   alias Cumbuca.Accounts.Account
   alias Cumbuca.Repo

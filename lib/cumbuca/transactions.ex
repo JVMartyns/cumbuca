@@ -1,4 +1,5 @@
 defmodule Cumbuca.Transactions do
+  @moduledoc false
   alias __MODULE__.{
     CreateTransaction,
     GetAllTransactions,
@@ -8,7 +9,6 @@ defmodule Cumbuca.Transactions do
     BuildTransference,
     InsertTransaction,
     PreloadAssoc,
-    # ProcessChargeback,
     ProcessTransaction,
     UpdateTransaction
   }

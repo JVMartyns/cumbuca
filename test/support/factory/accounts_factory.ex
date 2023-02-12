@@ -1,4 +1,5 @@
 defmodule Cumbuca.Factory.AccountFactory do
+  @moduledoc false
   alias Cumbuca.Accounts.Account
 
   defmacro __using__(_args) do

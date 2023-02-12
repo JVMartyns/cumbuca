@@ -1,4 +1,5 @@
 defmodule Cumbuca.Transactions.Transaction do
+  @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
   alias Cumbuca.Accounts.Account
