@@ -15,7 +15,7 @@ COPY . .
 RUN mkdir /root/.ssh
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
-RUN --mount=type=ssh mix do deps.get, deps.compile
+RUN --mount=type=ssh mix do deps.get, deps.compile --warnings-as-errors
 
 EXPOSE 4000
 

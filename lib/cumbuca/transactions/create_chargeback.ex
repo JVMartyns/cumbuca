@@ -1,4 +1,5 @@
 defmodule Cumbuca.Transactions.CreateChargeback do
+  @moduledoc false
   alias Cumbuca.Transactions
 
   def call(current_account_id, transaction_id) do

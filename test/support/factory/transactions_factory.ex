@@ -1,4 +1,5 @@
 defmodule Cumbuca.Factory.TransactionsFactory do
+  @moduledoc false
   alias Cumbuca.Factory
   alias Cumbuca.Transactions.Transaction
 

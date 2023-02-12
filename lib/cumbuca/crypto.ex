@@ -1,4 +1,5 @@
 defmodule Cumbuca.Crypto do
+  @moduledoc false
   @encryption_algorithm :aes_128_ctr
 
   @spec encrypt(any, String.t()) :: String.t()

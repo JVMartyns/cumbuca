@@ -1,9 +1,10 @@
 defmodule CumbucaWeb.Token do
+  @moduledoc false
   alias Cumbuca.Accounts.Account
   alias CumbucaWeb.Endpoint
   alias Phoenix.Token
 
-  @default_ttl 86400
+  @default_ttl 86_400
 
   def create(%Account{id: id}) do
     Token.sign(Endpoint, salt(), %{id: id})

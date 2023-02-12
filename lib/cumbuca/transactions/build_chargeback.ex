@@ -1,4 +1,5 @@
 defmodule Cumbuca.Transactions.BuildChargeback do
+  @moduledoc false
   import Ecto.Query
   alias Cumbuca.Accounts
   alias Cumbuca.Repo

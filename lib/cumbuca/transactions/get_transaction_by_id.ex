@@ -1,4 +1,5 @@
 defmodule Cumbuca.Transactions.GetTransactionById do
+  @moduledoc false
   alias Cumbuca.Repo
   alias Cumbuca.Transactions.Transaction
 

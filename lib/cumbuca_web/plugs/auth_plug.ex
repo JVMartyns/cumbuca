@@ -1,4 +1,5 @@
 defmodule CumbucaWeb.AuthPlug do
+  @moduledoc false
   import Plug.Conn
   alias CumbucaWeb.{ErrorView, Token}
   alias Phoenix.Controller

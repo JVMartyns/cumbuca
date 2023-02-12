@@ -1,4 +1,5 @@
 defmodule Cumbuca.Accounts do
+  @moduledoc false
   alias __MODULE__.{
     CheckBalance,
     CreateAccount,

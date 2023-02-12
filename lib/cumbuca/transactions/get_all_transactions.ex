@@ -1,4 +1,5 @@
 defmodule Cumbuca.Transactions.GetAllTransactions do
+  @moduledoc false
   import Ecto.Query
   alias Cumbuca.Repo
   alias Cumbuca.Transactions.Transaction

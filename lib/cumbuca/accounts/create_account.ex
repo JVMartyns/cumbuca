@@ -1,4 +1,5 @@
 defmodule Cumbuca.Accounts.CreateAccount do
+  @moduledoc false
   alias Cumbuca.Accounts.Account
   alias Cumbuca.Repo
 
