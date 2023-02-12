@@ -57,19 +57,19 @@ jobs:
         run: docker-compose up -d cumbuca_db
 
       - name: Code format
-        run: docker compose run --rm cumbuca mix format --check-formatted
-      # - name: Check unused deps in lockfile
-      #   run: mix deps.unlock --check-unused
-      # - name: Check compile warnings
-      #   run: mix compile --warnings-as-errors
-      # - name: Check code formating
-      #   run: mix format --check-formatted
-      # - name: Check code smells
-      #   run: mix credo --strict
-      # - name: Check tests
-      #   run: mix test --warnings-as-errors
-      # - name: Check seeds consistency
-      #   run: |
-      #     mix ecto.create
-      #     mix ecto.migrate
-      #     mix run priv/repo/seeds.exs
+        run: docker compose run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix format --check-formatted
+
+      - name: Check unused deps in lockfile
+        run: docker compose run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix deps.unlock --check-unused
+
+      - name: Check compile warnings
+        run: docker compose run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix compile --warnings-as-errors
+
+      - name: Check code smells
+        run: docker compose run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix credo --strict
+
+      - name: Check tests
+        run: docker compose run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix test --warnings-as-errors
+
+      - name: Migration rollback test
+        run: docker compose run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix do ecto.create, ecto.migrate, ecto.rollback --all
