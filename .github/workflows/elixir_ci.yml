@@ -16,8 +16,7 @@ jobs:
       - name: Setting up SSH
         uses: webfactory/ssh-agent@v0.5.4
         with:
-          ssh-private-key: |
-            ${{ secrets.SSH_SECRET_KEY }}
+          ssh-private-key: ${{ secrets.SSH_SECRET_KEY }}
 
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
