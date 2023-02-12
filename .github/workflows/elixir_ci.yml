@@ -57,7 +57,7 @@ jobs:
         run: docker-compose up -d cumbuca_db
 
       - name: Code format
-        run: docker run --rm -e MIX_ENV=test --env-file .env --name cumbuca --network cumbuca_network cumbuca:latest mix format --check-formatted
+        run: docker compose run --rm cumbuca mix format --check-formatted
       # - name: Check unused deps in lockfile
       #   run: mix deps.unlock --check-unused
       # - name: Check compile warnings
