@@ -29,4 +29,4 @@ jobs:
           GIGALIXIR_USERNAME: ${{ secrets.GIGALIXIR_USERNAME }}
           GIGALIXIR_PASSWORD: ${{ secrets.GIGALIXIR_PASSWORD }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_SECRET_KEY }}
-          MIGRATIONS: true
+          MIGRATIONS: false
