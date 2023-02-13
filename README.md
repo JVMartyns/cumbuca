@@ -21,6 +21,18 @@ Construir o container
 make build
 ```
 
+Criar o banco de dados
+
+```
+docker compose run --rm cumbuca mix ecto.create
+```
+
+Execute as migrações
+
+```
+docker compose run --rm cumbuca mix ecto.migrate
+```
+
 Iniciar a aplicação
 
 ```

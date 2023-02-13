@@ -13,8 +13,18 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - run: sudo pip install gigalixir --ignore-installed six
-      - run: gigalixir login -e "${{ secrets.GIGALIXIR_EMAIL }}" -y -p "${{ secrets.GIGALIXIR_PASSWORD }}"
-      - run: gigalixir git:remote ${{ secrets.GIGALIXIR_APP_NAME }}
-      - run: git push -f gigalixir HEAD:refs/heads/main
-      - run: gigalixir run mix ecto.migrate
+
+      - name: Install Gigalixir CLI
+        run: sudo pip install gigalixir --ignore-installed six
+
+      - name: Login
+        run: gigalixir login -e "${{ secrets.GIGALIXIR_EMAIL }}" -y -p "${{ secrets.GIGALIXIR_PASSWORD }}"
+
+      - name: Add remote git gigalixir
+        run: gigalixir git:remote ${{ secrets.GIGALIXIR_APP_NAME }}
+
+      - name: Deploy
+        run: git push -f gigalixir HEAD:refs/heads/main
+
+      - name: Run migrations
+        run: gigalixir run mix ecto.migrate
