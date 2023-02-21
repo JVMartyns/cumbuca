@@ -26,7 +26,15 @@ defmodule Cumbuca.Transactions.BuildChargeback do
   end
 
   defp enabled_to_chargeback?(current_account_id, transaction) do
-    query = from t in Transaction, where: t.reversed_transaction_id == ^transaction.id
-    Repo.exists?(query) == false and current_account_id == transaction.receiver_account_id
+    with true <- current_account_id == transaction.receiver_account_id,
+         false <- chargeback_already_exists_for_this_transaction(transaction.id) do
+      true
+    else
+      _ -> false
+    end
+  end
+
+  defp chargeback_already_exists_for_this_transaction(transaction_id) do
+    Repo.exists?(from t in Transaction, where: t.reversed_transaction_id == ^transaction_id)
   end
 end
