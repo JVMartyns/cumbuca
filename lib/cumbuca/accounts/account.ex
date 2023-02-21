@@ -27,6 +27,8 @@ defmodule Cumbuca.Accounts.Account do
     |> validate_required(@required_fields)
     |> validate_number(:balance, greater_than_or_equal_to: 0)
     |> validate_cpf()
+    |> unique_constraint(:cpf)
+    |> check_constraint(:balance, name: :balance_must_be_positive)
   end
 
   defp validate_cpf(changeset) do
