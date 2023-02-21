@@ -27,7 +27,7 @@ defmodule Cumbuca.Transactions.BuildChargeback do
 
   defp enabled_to_chargeback?(current_account_id, transaction) do
     current_account_id == transaction.receiver_account_id and
-      chargeback_already_exists_for_this_transaction(transaction.id)
+      not chargeback_already_exists_for_this_transaction(transaction.id)
   end
 
   defp chargeback_already_exists_for_this_transaction(transaction_id) do
