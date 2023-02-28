@@ -55,7 +55,9 @@ defmodule Cumbuca.MixProject do
       {:cpf, git: "https://github.com/JVMartyns/elixir_cpf.git", tag: "0.1.1"},
       {:ex_machina, "~> 2.7.0", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:sentry, "~> 8.0"},
+      {:hackney, "~> 1.8"}
     ]
   end
 
