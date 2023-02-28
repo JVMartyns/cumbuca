@@ -45,7 +45,7 @@ config :cumbuca, :crypto, secret: System.get_env("CRYPTO_SECRET", "H1vmRcs83J3lT
 
 # Sentry
 config :sentry,
-  dsn: System.get_env("SENTRY_DNS"),
+  dsn: System.get_env("SENTRY_DSN"),
   included_environments: [:prod],
   environment_name: Mix.env()
 
