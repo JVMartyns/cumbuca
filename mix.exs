@@ -57,7 +57,7 @@ defmodule Cumbuca.MixProject do
       {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:sentry, "~> 8.0"},
-      {:hackney, "~> 1.8"},
+      {:hackney, "~> 1.8"}
     ]
   end
 
