@@ -43,6 +43,12 @@ config :cumbuca, :token,
 
 config :cumbuca, :crypto, secret: System.get_env("CRYPTO_SECRET", "H1vmRcs83J3lT9CSuIx1yQ==")
 
+# Sentry
+config :sentry,
+  dsn: System.get_env("SENTRY_DNS"),
+  included_environments: [:prod],
+  environment_name: Mix.env()
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
