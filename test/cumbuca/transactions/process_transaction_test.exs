@@ -2,9 +2,27 @@ defmodule Cumbuca.Transactions.ProcessTransactionTest do
   use Cumbuca.DataCase
   import Cumbuca.Factory
   alias Cumbuca.Transactions.ProcessTransaction
+  alias Cumbuca.Repo
+  alias Ecto.Adapters.SQL.Sandbox
+
+  setup tags do
+    :ok =
+      if tags[:isolation] do
+        Sandbox.checkout(Repo, isolation: tags[:isolation])
+      else
+        Sandbox.checkout(Repo)
+      end
+
+    unless tags[:async] do
+      Sandbox.mode(Repo, {:shared, self()})
+    end
+
+    :ok
+  end
 
   describe "call/1" do
-    test " " do
+    @tag isolation: "repeatable read"
+    test "process transaction" do
       %{id: sender_account_id, balance: sender_account_balance} = insert(:account)
 
       %{id: receiver_account_id, balance: receiver_account_balance} = insert(:account)
