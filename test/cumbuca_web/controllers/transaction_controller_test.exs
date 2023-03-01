@@ -2,8 +2,8 @@ defmodule CumbucaWeb.TransactionControllerTest do
   alias Cumbuca.Accounts
   use CumbucaWeb.ConnCase
   import Cumbuca.Factory
-  alias Ecto.Adapters.SQL.Sandbox
   alias Cumbuca.Repo
+  alias Ecto.Adapters.SQL.Sandbox
 
   setup tags do
     :ok =

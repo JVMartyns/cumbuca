@@ -1,8 +1,8 @@
 defmodule Cumbuca.Transactions.ProcessTransactionTest do
   use Cumbuca.DataCase
   import Cumbuca.Factory
-  alias Cumbuca.Transactions.ProcessTransaction
   alias Cumbuca.Repo
+  alias Cumbuca.Transactions.ProcessTransaction
   alias Ecto.Adapters.SQL.Sandbox
 
   setup tags do

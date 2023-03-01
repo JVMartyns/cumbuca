@@ -2,9 +2,14 @@ defmodule Cumbuca.Transactions.ProcessTransaction do
   @moduledoc false
   import Ecto.Query
   alias Ecto.Multi
-  alias Cumbuca.{Accounts, Repo, Transactions}
-  alias Accounts.Account
-  alias Transactions.Transaction
+
+  alias Cumbuca.{
+    Accounts,
+    Accounts.Account,
+    Repo,
+    Transactions,
+    Transactions.Transaction
+  }
 
   @spec call(Ecto.UUID) :: {:ok, Transaction.t()} | {:error, any()}
   def call(transaction_id) do
