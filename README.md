@@ -2,7 +2,7 @@
 
 Desafios de Contratação Cumbuca Backend
 
-- [Documentação do desafio](https://github.com/appcumbuca/desafios/blob/master/desafio-back-end.md)
+- [Documentação do desafio](desafio-back-end.md)
 
 API de conta bancária:
 
