@@ -2,6 +2,23 @@ defmodule CumbucaWeb.TransactionControllerTest do
   alias Cumbuca.Accounts
   use CumbucaWeb.ConnCase
   import Cumbuca.Factory
+  alias Cumbuca.Repo
+  alias Ecto.Adapters.SQL.Sandbox
+
+  setup tags do
+    :ok =
+      if tags[:isolation] do
+        Sandbox.checkout(Repo, isolation: tags[:isolation])
+      else
+        Sandbox.checkout(Repo)
+      end
+
+    unless tags[:async] do
+      Sandbox.mode(Repo, {:shared, self()})
+    end
+
+    :ok
+  end
 
   describe "show/2" do
     test "show all transactions", %{conn: conn} do
@@ -188,6 +205,7 @@ defmodule CumbucaWeb.TransactionControllerTest do
   end
 
   describe "process_transaction/2" do
+    @tag isolation: "repeatable read"
     test "processes a transaction by id", %{conn: conn} do
       %{id: sender_account_id, cpf: sender_account_cpf} = sender_account = insert(:account)
       %{id: receiver_account_id, cpf: receiver_account_cpf} = receiver_account = insert(:account)
@@ -246,8 +264,9 @@ defmodule CumbucaWeb.TransactionControllerTest do
     end
   end
 
-  describe "" do
-    test "", %{conn: conn} do
+  describe "create chargeback" do
+    @tag isolation: "repeatable read"
+    test "process an chargeback", %{conn: conn} do
       %{id: sender_account_id, cpf: sender_account_cpf} = sender_account = insert(:account)
       %{id: receiver_account_id, cpf: receiver_account_cpf} = receiver_account = insert(:account)
 

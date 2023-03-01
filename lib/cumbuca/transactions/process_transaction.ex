@@ -1,16 +1,45 @@
 defmodule Cumbuca.Transactions.ProcessTransaction do
   @moduledoc false
-  alias Cumbuca.{Accounts, Repo, Transactions}
-  alias Ecto.Multi
   import Ecto.Query
-  alias Transactions.Transaction
+  alias Ecto.Multi
 
+  alias Cumbuca.{
+    Accounts,
+    Accounts.Account,
+    Repo,
+    Transactions,
+    Transactions.Transaction
+  }
+
+  @spec call(Ecto.UUID) :: {:ok, Transaction.t()} | {:error, any()}
   def call(transaction_id) do
-    with {:ok, transaction} <- Transactions.get_transaction_by_id(transaction_id),
-         {:ok, "ready to process"} <- check_processing_status(transaction),
-         {:ok, "ready to process"} <- check_chargeback_status(transaction),
-         {:ok, %{transaction: result}} <- process_transaction(transaction) do
-      {:ok, result}
+    Repo.transaction(fn ->
+      Repo.query!("set transaction isolation level repeatable read;")
+      process_transaction(transaction_id)
+    end)
+    |> case do
+      {:ok, {:ok, %{update_transaction: transaction}}} -> {:ok, transaction}
+      {:error, _} = error -> error
+    end
+  end
+
+  def process_transaction(transaction_id) do
+    Multi.new()
+    |> Multi.run(:load_data, fn _, _ -> load_transaction_data(transaction_id) end)
+    |> Multi.run(:check, &perform_transaction_check/2)
+    |> Multi.run(:subtract_balance, &subtract_balance_from_account/2)
+    |> Multi.run(:add_balance, &add_balance_into_account/2)
+    |> Multi.run(:update_transaction, &update_transaction_status/2)
+    |> Repo.transaction()
+  end
+
+  defp perform_transaction_check(_repo, %{
+         load_data: %Transaction{sender_account: sender, value: value} = transaction
+       }) do
+    with {:ok, _} <- check_processing_status(transaction),
+         {:ok, _} <- check_chargeback_status(transaction),
+         {:ok, _} <- Accounts.check_balance(sender, value) do
+      {:ok, transaction}
     end
   end
 
@@ -26,49 +55,39 @@ defmodule Cumbuca.Transactions.ProcessTransaction do
     end
   end
 
-  defp process_transaction(transaction) do
-    Multi.new()
-    |> Multi.run(:data, fn _, _ -> load_transaction_data(transaction) end)
-    |> Multi.run(:sender_account, &subtract_value_from_account/2)
-    |> Multi.run(:receiver_account, &add_value_into_receiver_account/2)
-    |> Multi.run(:transaction, &update_transaction_status/2)
-    |> Repo.transaction()
-  end
-
-  defp load_transaction_data(transaction) do
-    preloads = [:sender_account, :receiver_account]
-
-    with {:ok, loaded} <- Transactions.preload_assoc(transaction, preloads) do
-      {:ok,
-       %{
-         sender_account: loaded.sender_account,
-         receiver_account: loaded.receiver_account,
-         transaction: transaction
-       }}
+  defp load_transaction_data(transaction_id) do
+    with {:ok, transaction} <- Transactions.get_transaction_by_id(transaction_id) do
+      Transactions.preload_assoc(transaction, [:sender_account, :receiver_account])
     end
   end
 
-  defp subtract_value_from_account(_repo, %{
-         data: %{sender_account: sender_account, transaction: transaction}
+  defp subtract_balance_from_account(_repo, %{
+         load_data: %Transaction{sender_account: account, value: value}
        }) do
-    new_balance = Decimal.sub(sender_account.balance, transaction.value)
-    Accounts.update_account(sender_account, %{balance: new_balance})
+    Accounts.update_account(account, %{balance: Decimal.sub(account.balance, value)})
   end
 
-  defp add_value_into_receiver_account(_repo, %{
-         data: %{receiver_account: receiver_account, transaction: transaction}
+  defp add_balance_into_account(_repo, %{
+         load_data: %Transaction{receiver_account: account, value: value}
        }) do
-    new_balance = Decimal.add(receiver_account.balance, transaction.value)
-    Accounts.update_account(receiver_account, %{balance: new_balance})
+    Accounts.update_account(account, %{balance: Decimal.add(account.balance, value)})
   end
 
-  defp update_transaction_status(_repo, %{data: %{transaction: transaction}}) do
-    datetime = %{DateTime.utc_now() | microsecond: {0, 0}}
-    preloads = [:sender_account, :receiver_account]
+  defp update_transaction_status(_repo, %{
+         load_data: %Transaction{} = transaction,
+         subtract_balance: %Account{} = sender_account,
+         add_balance: %Account{} = receiver_account
+       }) do
+    attrs = %{processed_at: %{DateTime.utc_now() | microsecond: {0, 0}}}
 
-    case Transactions.update_transaction(transaction, %{processed_at: datetime}) do
+    case Transactions.update_transaction(transaction, attrs) do
       {:ok, updated_transaction} ->
-        Transactions.preload_assoc(updated_transaction, preloads)
+        {:ok,
+         %Transaction{
+           updated_transaction
+           | sender_account: sender_account,
+             receiver_account: receiver_account
+         }}
 
       error ->
         error
